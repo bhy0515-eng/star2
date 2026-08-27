@@ -443,6 +443,18 @@
                 <!-- Injected via JS -->
             </div>
 
+            <!-- Combined Preview Box (mirrors Step 4) -->
+            <div class="bg-emerald-50/70 p-4 rounded-2xl border-2 border-emerald-300 shadow-sm space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="block text-xs sm:text-sm font-bold text-emerald-900">
+                        <i class="fa-solid fa-layer-group text-emerald-600 mr-1.5"></i>단원별 작성 내용 종합 미리보기
+                    </span>
+                    <span id="step5-merged-char-count" class="text-xs text-emerald-700 font-bold">0 자</span>
+                </div>
+                <p class="text-[11px] text-emerald-700 -mt-1">선택된 단원들에서 최종 확정(또는 작성)한 성취수준 및 특기사항이 이곳에 자동으로 합쳐져 표시되며, 위 입력창을 수정하면 즉시 반영됩니다.</p>
+                <p id="step5-merged-preview" class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium bg-white p-3 rounded-xl border border-emerald-200 whitespace-pre-line"></p>
+            </div>
+
             <div class="flex space-x-3 pt-2">
                 <button onclick="goToStep(4)" class="w-1/3 sm:w-32 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3.5 px-4 rounded-xl transition text-xs sm:text-sm">
                     이전
@@ -1361,6 +1373,30 @@
                 }
             }
             renderStep5Comparison();
+            renderStep5MergedPreview();
+        }
+
+        function renderStep5MergedPreview() {
+            const sNum = selectedStudentStep5;
+            const mergedEl = document.getElementById('step5-merged-preview');
+            const mergedCountEl = document.getElementById('step5-merged-char-count');
+            if (!mergedEl) return;
+
+            const merged = getStudentComprehensiveText(sNum);
+            mergedEl.innerText = merged;
+            if (mergedCountEl) {
+                const len = (merged === "(교사 작성 성취수준 및 특기사항 미작성)") ? 0 : merged.length;
+                mergedCountEl.innerText = `${len} 자`;
+            }
+        }
+
+        function saveStep5FinalComment(sNum) {
+            const uState = getUnitState(activeUnitKey);
+            const el = document.getElementById(`step5-final-input-${sNum}`);
+            if (!el) return;
+            uState.finalComments[sNum] = el.value;
+            saveData();
+            renderStep5MergedPreview();
         }
 
         function renderStep5Comparison() {
@@ -1383,6 +1419,7 @@
                         <p class="text-xs sm:text-sm text-amber-800">4단계 성취수준 선택 및 성취기준·특기사항 작성을 먼저 진행해 주세요.</p>
                     </div>
                 `;
+                renderStep5MergedPreview();
                 return;
             }
 
@@ -1429,7 +1466,7 @@
                             <label for="step5-final-input-${sNum}" class="font-bold text-slate-800 block text-xs">
                                 <i class="fa-solid fa-check-double text-emerald-600 mr-1"></i>[최종 수정한 교사 성취기준 및 특기사항]
                             </label>
-                            <textarea id="step5-final-input-${sNum}" rows="4" class="w-full text-xs sm:text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus outline-none resize-none h-28">${uState.finalComments[sNum] || initialComment}</textarea>
+                            <textarea id="step5-final-input-${sNum}" rows="4" oninput="saveStep5FinalComment(${sNum})" class="w-full text-xs sm:text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus outline-none resize-none h-28">${uState.finalComments[sNum] || initialComment}</textarea>
                         </div>
                     </div>
 
@@ -1438,12 +1475,14 @@
                     </button>
                 </div>
             `;
+            renderStep5MergedPreview();
         }
 
         function confirmFinalComment(sNum) {
             const uState = getUnitState(activeUnitKey);
             uState.finalComments[sNum] = document.getElementById(`step5-final-input-${sNum}`).value;
             saveData();
+            renderStep5MergedPreview();
             showToast(`[${kumgangUnits[activeUnitKey].name.split('.')[0]}] 학생 0${sNum} 교사 최종 문장 저장 완료`);
         }
 
