@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4학년 1학기 국어 교과학습발달상황 작성 실습 (최대 3개 단원 종합 보고서)</title>
+    <title>4학년 1학기 국어 교과학습발달상황 작성 실습 (모바일 & 노트북 반응형)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -11,7 +11,7 @@
     <!-- html2pdf.js for Client-side PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Google Fonts Noto Sans KR -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -21,14 +21,19 @@
                         primary: {
                             50: '#f0f7ff',
                             100: '#e0effe',
+                            200: '#bae0fd',
                             500: '#2563eb',
                             600: '#1d4ed8',
                             700: '#1e40af',
+                            800: '#1e3a8a',
+                            900: '#172554',
                         },
                         secondary: {
                             50: '#f0fdfa',
+                            100: '#ccfbf1',
                             500: '#14b8a6',
                             600: '#0d9488',
+                            700: '#0f766e',
                         },
                         accent: {
                             500: '#f97316',
@@ -52,6 +57,21 @@
         .touch-action-manipulation {
             touch-action: manipulation;
         }
+        /* Custom Scrollbar for smooth desktop interaction */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
         @media print {
             .no-print {
                 display: none !important;
@@ -73,116 +93,138 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col items-center justify-start pb-20">
 
-    <!-- Top Navigation Header -->
-    <header class="w-full max-w-md bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm no-print">
-        <div class="px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-book-bookmark text-primary-600 text-xl"></i>
+    <!-- Top Navigation Header - Responsive Width -->
+    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 bg-primary-100 text-primary-600 rounded-xl flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                </div>
                 <div>
-                    <h1 class="font-bold text-slate-800 text-sm leading-tight">국어 교과학습발달상황 작성 실습</h1>
-                    <p class="text-[10px] text-slate-500 font-medium">1~3개 단원 연계 종합 보고서 모드</p>
+                    <h1 class="font-bold text-slate-800 text-sm md:text-base leading-tight">국어 교과학습발달상황 작성 실습</h1>
+                    <p class="text-[11px] md:text-xs text-slate-500 font-medium">1~3개 단원 연계 종합 보고서 모드 (모바일 & 데스크톱 대응)</p>
                 </div>
             </div>
-            <button onclick="confirmReset()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-1.5 rounded-lg transition font-medium">
-                <i class="fa-solid fa-rotate-right mr-1"></i>초기화
-            </button>
-        </div>
-        <!-- Progress Bar (6 Steps) -->
-        <div id="progress-container" class="px-4 py-2 bg-slate-50 border-t border-slate-100 hidden">
-            <div class="flex justify-between items-center mb-1 text-xs text-slate-600 font-semibold">
-                <span id="step-indicator-text">1 / 6 단계</span>
-                <span id="step-title-mini" class="text-primary-600 font-bold">실습 단원 선택</span>
+            <div class="flex items-center space-x-2">
+                <button onclick="toggleModal('guide-modal', true)" class="hidden sm:inline-flex items-center text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl transition font-medium">
+                    <i class="fa-solid fa-circle-info mr-1.5 text-slate-500"></i>가이드
+                </button>
+                <button onclick="confirmReset()" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl transition font-semibold">
+                    <i class="fa-solid fa-rotate-right mr-1"></i>초기화
+                </button>
             </div>
-            <div class="flex space-x-1 h-2 w-full">
-                <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
-                <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
-                <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
-                <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
-                <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
-                <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
+        </div>
+        
+        <!-- Progress Bar (6 Steps) -->
+        <div id="progress-container" class="bg-slate-50 border-t border-slate-100 hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+                <div class="flex justify-between items-center mb-1.5 text-xs text-slate-600 font-semibold">
+                    <span id="step-indicator-text" class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-bold">1 / 6 단계</span>
+                    <span id="step-title-mini" class="text-primary-600 font-bold sm:text-sm">실습 단원 선택</span>
+                </div>
+                <div class="flex space-x-1.5 h-2 w-full">
+                    <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
+                    <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
+                    <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
+                    <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
+                    <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
+                    <div class="step-dot flex-1 bg-slate-200 rounded-full transition-all duration-300"></div>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Global Toast Notification -->
-    <div id="toast" class="fixed top-14 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-4 py-2.5 rounded-xl shadow-lg text-sm font-medium z-50 transition-all duration-300 opacity-0 pointer-events-none flex items-center space-x-2 max-w-xs text-center">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+    <div id="toast" class="fixed top-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-medium z-50 transition-all duration-300 opacity-0 pointer-events-none flex items-center space-x-2.5 max-w-sm text-center">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
         <span id="toast-message">알림 메시지</span>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
-    <main class="w-full max-w-md px-4 py-4 flex-1">
+    <!-- MAIN APP CONTAINER - Fully Responsive width from phone to desktop -->
+    <main class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex-1">
 
         <!-- SCREEN 0: INTRO SCREEN -->
-        <section id="screen-intro" class="app-screen space-y-5">
-            <div class="bg-gradient-to-br from-primary-600 to-primary-700 text-white p-6 rounded-2xl shadow-md text-center space-y-3">
-                <span class="inline-block bg-primary-500/40 text-primary-100 text-xs px-3 py-1 rounded-full font-medium">초등학교 4학년 1학기 국어 연수용</span>
-                <h2 class="text-2xl font-bold leading-snug">국어 교과학습발달상황<br>단원 작성 실습</h2>
-                <p class="text-primary-100 text-xs font-light leading-relaxed">
-                    수행평가 단원을 선택하여 교사가 직접 작성한 문장으로 종합 특기사항을 완성해 보세요!
-                </p>
-            </div>
-
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-slate-700 text-sm leading-relaxed">
-                <p class="font-medium text-slate-800 border-l-4 border-primary-500 pl-2">단원 연계 실습 안내</p>
-                <p class="text-xs">
-                    단일 수행평가 단원부터 <b>최대 3개 단원</b>의 누적된 평가 및 관찰 데이터를 종합하여 학생별 <b>학기말 교과학습발달상황 특기사항</b>을 직접 구상 및 생성할 수 있습니다.
-                </p>
-                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-800 text-xs space-y-1">
-                    <p class="font-bold flex items-center"><i class="fa-solid fa-triangle-exclamation mr-1"></i> 교사 종합 판단 안내</p>
-                    <p>• 예시 문장은 교사의 종합적 판단을 지원하는 참고 자료입니다.</p>
-                    <p>• 실제 학생의 개인정보는 입력하지 마세요.</p>
+        <section id="screen-intro" class="app-screen space-y-6 max-w-4xl mx-auto">
+            <div class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white p-6 sm:p-8 rounded-3xl shadow-lg text-center md:text-left md:flex md:items-center md:justify-between gap-6">
+                <div class="space-y-3 md:max-w-xl">
+                    <span class="inline-block bg-primary-500/40 text-primary-100 text-xs sm:text-sm px-3.5 py-1 rounded-full font-semibold border border-primary-400/30">초등학교 4학년 1학기 국어 교사 연수용</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold leading-snug">국어 교과학습발달상황<br class="hidden sm:inline"> 단원 작성 실습</h2>
+                    <p class="text-primary-100 text-xs sm:text-sm font-light leading-relaxed">
+                        수행평가 단원을 직접 선택하고 학생별 수행·관찰 기록을 기반으로 종합 특기사항 문장을 구상 및 완성해보세요.
+                    </p>
+                </div>
+                <div class="mt-5 md:mt-0 flex-shrink-0 flex justify-center">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 bg-white/10 backdrop-blur rounded-2xl border border-white/20 flex flex-col items-center justify-center p-3 text-center">
+                        <i class="fa-solid fa-graduation-cap text-3xl sm:text-4xl text-amber-300 mb-1"></i>
+                        <span class="text-[11px] font-bold text-white">종합 보고서</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-primary-50 border border-primary-100 p-4 rounded-2xl space-y-2">
-                <div class="text-xs font-bold text-primary-700 uppercase tracking-wide flex items-center justify-between">
-                    <span>핵심 교육 가치</span>
-                    <i class="fa-solid fa-award text-primary-600"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-slate-700 text-sm leading-relaxed">
+                    <p class="font-bold text-slate-800 border-l-4 border-primary-500 pl-2 text-base">단원 연계 실습 안내</p>
+                    <p class="text-xs sm:text-sm">
+                        단일 수행평가 단원부터 <b>최대 3개 단원</b>의 누적된 평가 및 관찰 데이터를 종합하여 학생별 <b>학기말 교과학습발달상황 특기사항</b>을 직접 구상 및 생성할 수 있습니다.
+                    </p>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-amber-900 text-xs space-y-1">
+                        <p class="font-bold flex items-center"><i class="fa-solid fa-triangle-exclamation mr-1.5 text-amber-600"></i> 교사 종합 판단 안내</p>
+                        <p>• 예시 문장은 교사의 종합적 판단을 지원하는 참고 자료입니다.</p>
+                        <p>• 실제 학생의 개인정보는 입력하지 마세요.</p>
+                    </div>
                 </div>
-                <div class="text-xs font-bold text-slate-800 leading-snug">
-                    "단원별 성취와 교사 관찰 기록을 누적하여 학생의 다각적 성장을 한눈에 보여주는 종합적 교과학습발달상황 완성"
-                </div>
-            </div>
 
-            <div class="pt-2 space-y-2">
-                <button onclick="goToStep(1)" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-base touch-action-manipulation">
-                    <span>실습 시작하기</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-                <button onclick="toggleModal('guide-modal', true)" class="w-full bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-semibold py-3 px-4 rounded-xl transition text-sm touch-action-manipulation">
-                    <i class="fa-solid fa-circle-info mr-1 text-slate-500"></i>실습 가이드 및 안내 보기
-                </button>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="text-xs font-bold text-primary-700 uppercase tracking-wide flex items-center justify-between border-b pb-2">
+                            <span>핵심 교육 가치</span>
+                            <i class="fa-solid fa-award text-primary-600 text-base"></i>
+                        </div>
+                        <div class="text-xs sm:text-sm font-bold text-slate-800 leading-snug bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            "단원별 성취와 교사 관찰 기록을 누적하여 학생의 다각적 성장을 한눈에 보여주는 종합적 교과학습발달상황 완성"
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2 pt-2">
+                        <button onclick="goToStep(1)" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-5 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm sm:text-base touch-action-manipulation">
+                            <span>실습 시작하기</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button onclick="toggleModal('guide-modal', true)" class="w-full bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-semibold py-2.5 px-4 rounded-xl transition text-xs sm:text-sm touch-action-manipulation">
+                            <i class="fa-solid fa-circle-info mr-1.5 text-slate-500"></i>실습 가이드 및 작성 안내 보기
+                        </button>
+                    </div>
+                </div>
             </div>
         </section>
 
 
         <!-- SCREEN 1: STEP 1 (Unit Selection) -->
-        <section id="screen-step1" class="app-screen space-y-4 hidden">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <section id="screen-step1" class="app-screen space-y-5 hidden">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="bg-primary-100 text-primary-700 px-2 py-0.5 rounded text-xs font-bold">1단계</span>
-                    <span id="selected-units-count-badge" class="text-xs font-bold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full">1~3개 단원 선택됨</span>
+                    <span class="bg-primary-100 text-primary-700 px-2.5 py-1 rounded-md text-xs font-bold">1단계</span>
+                    <span id="selected-units-count-badge" class="text-xs font-bold text-primary-600 bg-primary-50 px-3 py-1 rounded-full border border-primary-200">1~3개 단원 선택됨</span>
                 </div>
-                <h2 class="font-bold text-sm text-slate-800">실습할 수행평가 단원 선택 (1개~최대 3개)</h2>
-                <p class="text-xs text-slate-500">보고서 생성을 위해 수행평가 단원을 1개~3개 선택하세요.</p>
+                <h2 class="font-bold text-sm sm:text-base text-slate-800">실습할 수행평가 단원 선택 (1개~최대 3개)</h2>
+                <p class="text-xs sm:text-sm text-slate-500">보고서 생성을 위해 수행평가 단원을 1개~3개 선택하세요.</p>
             </div>
 
-            <!-- Multi Checkbox List -->
-            <div id="unit-selection-cards" class="space-y-2.5">
+            <!-- Multi Checkbox List Responsive Grid: 1 col on phone, 2 col on tablet, 3 col on laptop -->
+            <div id="unit-selection-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 <!-- Injected via JS -->
             </div>
 
             <!-- Dynamic Selected Units Summary Badge Bar -->
-            <div class="bg-slate-100 p-3 rounded-xl space-y-1.5 border border-slate-200">
-                <span class="text-[11px] font-bold text-slate-700 block">선택된 실습 단원 목록 (좌측 단원부터 배치):</span>
-                <div id="unit-active-pills-step1" class="flex flex-wrap gap-1.5">
+            <div class="bg-slate-100 p-4 rounded-2xl space-y-2 border border-slate-200">
+                <span class="text-xs font-bold text-slate-700 block"><i class="fa-solid fa-list-check text-primary-600 mr-1.5"></i>선택된 실습 단원 목록 (교육과정 순서로 자동 정렬):</span>
+                <div id="unit-active-pills-step1" class="flex flex-wrap gap-2">
                     <!-- Dynamic Pills -->
                 </div>
             </div>
 
-            <div class="pt-2">
-                <button onclick="proceedFromStep1()" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-4 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm touch-action-manipulation">
+            <div class="pt-2 flex justify-end">
+                <button onclick="proceedFromStep1()" class="w-full sm:w-auto sm:min-w-[280px] bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-6 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm sm:text-base touch-action-manipulation">
                     <span>단원별 성취기준 및 주안점 확인하기</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -191,40 +233,40 @@
 
 
         <!-- SCREEN 2: STEP 2 (Selected Unit Details & Focus) -->
-        <section id="screen-step2" class="app-screen space-y-4 hidden">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <section id="screen-step2" class="app-screen space-y-5 hidden">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="bg-primary-100 text-primary-700 px-2 py-0.5 rounded text-xs font-bold">2단계</span>
+                    <span class="bg-primary-100 text-primary-700 px-2.5 py-1 rounded-md text-xs font-bold">2단계</span>
                     <span id="step2-current-unit-badge" class="text-xs text-slate-500 font-medium">단원 정보 상세</span>
                 </div>
-                <h2 class="font-bold text-sm text-slate-800">선택 단원 성취기준 및 수업·평가 주안점 확인</h2>
-                <p class="text-xs text-slate-600">선택한 단원 탭을 클릭하여 성취기준과 평가 주안점을 검토하세요.</p>
+                <h2 class="font-bold text-sm sm:text-base text-slate-800">선택 단원 성취기준 및 수업·평가 주안점 확인</h2>
+                <p class="text-xs sm:text-sm text-slate-600">선택한 단원 탭을 클릭하여 성취기준과 평가 주안점을 검토하세요.</p>
             </div>
 
-            <!-- Selected Units Switcher Tabs (Leftmost active by default) -->
-            <div id="step2-unit-pills" class="flex space-x-1 bg-slate-200 p-1 rounded-xl text-xs font-bold overflow-x-auto">
+            <!-- Selected Units Switcher Tabs -->
+            <div id="step2-unit-pills" class="flex space-x-2 bg-slate-200 p-1.5 rounded-2xl text-xs font-bold overflow-x-auto">
                 <!-- Dynamic Pills injected via JS -->
             </div>
 
-            <!-- Dynamic Standard Details for Currently Active Unit -->
-            <div id="active-unit-detail-container" class="space-y-2.5">
+            <!-- Dynamic Standard Details for Currently Active Unit (Responsive Grid on Laptop) -->
+            <div id="active-unit-detail-container" class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <!-- Rendered dynamically via JS -->
             </div>
 
             <!-- Question & Memo Input -->
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                <label for="step1-memo" class="block text-xs font-bold text-slate-800 leading-snug">
-                    <i class="fa-solid fa-pen-to-square text-accent-500 mr-1"></i>
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+                <label for="step1-memo" class="block text-xs sm:text-sm font-bold text-slate-800 leading-snug">
+                    <i class="fa-solid fa-pen-to-square text-accent-500 mr-1.5"></i>
                     질문: 선택한 단원들에서 학생의 성취수준을 종합 판단하기 위한 핵심 요소는 무엇인가요?
                 </label>
-                <textarea id="step1-memo" rows="2" oninput="saveData()" placeholder="예: 문학적 감상 능력, 관찰 보고 능력, 원인-결과 구술 표현 능력의 종합 파악 등" class="w-full text-xs p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none"></textarea>
+                <textarea id="step1-memo" rows="2" oninput="saveData()" placeholder="예: 문학적 감상 능력, 관찰 보고 능력, 원인-결과 구술 표현 능력의 종합 파악 등" class="w-full text-xs sm:text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none"></textarea>
             </div>
 
-            <div class="flex space-x-2 pt-2">
-                <button onclick="goToStep(1)" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-3 rounded-xl transition text-xs">
+            <div class="flex space-x-3 pt-2">
+                <button onclick="goToStep(1)" class="w-1/3 sm:w-32 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3.5 px-4 rounded-xl transition text-xs sm:text-sm">
                     이전
                 </button>
-                <button onclick="goToStep(3)" class="w-2/3 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-4 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm touch-action-manipulation">
+                <button onclick="goToStep(3)" class="w-2/3 flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-5 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm sm:text-base touch-action-manipulation">
                     <span>학생별 수행 자료 확인하기</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -233,38 +275,38 @@
 
 
         <!-- SCREEN 3: STEP 3 (Student Case Data) -->
-        <section id="screen-step3" class="app-screen space-y-4 hidden">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <section id="screen-step3" class="app-screen space-y-5 hidden">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="bg-primary-100 text-primary-700 px-2 py-0.5 rounded text-xs font-bold">3단계</span>
+                    <span class="bg-primary-100 text-primary-700 px-2.5 py-1 rounded-md text-xs font-bold">3단계</span>
                     <span id="step3-current-unit-badge" class="text-xs text-slate-500 font-medium">단원 선택</span>
                 </div>
-                <h2 class="font-bold text-sm text-slate-800">학생 수행 및 학습활동 다각도 자료 확인</h2>
-                <p class="text-xs text-slate-600">선택된 단원별 학생 자료 및 관찰 기록을 검토하세요.</p>
+                <h2 class="font-bold text-sm sm:text-base text-slate-800">학생 수행 및 학습활동 다각도 자료 확인</h2>
+                <p class="text-xs sm:text-sm text-slate-600">선택된 단원별 학생 자료 및 관찰 기록을 검토하세요.</p>
             </div>
 
             <!-- Unit Selector Switcher Tabs -->
-            <div id="step3-unit-tabs" class="flex space-x-1 bg-slate-200 p-1 rounded-xl text-xs font-bold overflow-x-auto">
+            <div id="step3-unit-tabs" class="flex space-x-2 bg-slate-200 p-1.5 rounded-2xl text-xs font-bold overflow-x-auto">
                 <!-- Injected via JS -->
             </div>
 
             <!-- Student Tabs -->
-            <div class="flex space-x-1 bg-slate-200 p-1 rounded-xl">
-                <button onclick="selectStudentTab(1)" id="tab-btn-1" class="student-tab flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-primary-600 shadow-sm">학생 ①</button>
+            <div class="flex space-x-2 bg-slate-200 p-1.5 rounded-2xl max-w-md">
+                <button onclick="selectStudentTab(1)" id="tab-btn-1" class="student-tab flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-primary-600 shadow-sm">학생 ①</button>
                 <button onclick="selectStudentTab(2)" id="tab-btn-2" class="student-tab flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600">학생 ②</button>
                 <button onclick="selectStudentTab(3)" id="tab-btn-3" class="student-tab flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600">학생 ③</button>
             </div>
 
-            <!-- Student Content Panel -->
-            <div id="student-data-panel" class="space-y-3">
+            <!-- Student Content Panel - Responsive Grid on Laptop -->
+            <div id="student-data-panel" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 <!-- Dynamically rendered via JS -->
             </div>
 
-            <div class="flex space-x-2 pt-2">
-                <button onclick="goToStep(2)" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-3 rounded-xl transition text-xs">
+            <div class="flex space-x-3 pt-2">
+                <button onclick="goToStep(2)" class="w-1/3 sm:w-32 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3.5 px-4 rounded-xl transition text-xs sm:text-sm">
                     이전
                 </button>
-                <button onclick="goToStep(4)" class="w-2/3 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-4 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm touch-action-manipulation">
+                <button onclick="goToStep(4)" class="w-2/3 flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-5 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm sm:text-base touch-action-manipulation">
                     <span>성취수준 선택 및 특기사항 작성하기</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -273,93 +315,105 @@
 
 
         <!-- SCREEN 4: STEP 4 (Merged Grade Selection & Special Notes Input) -->
-        <section id="screen-step4" class="app-screen space-y-4 hidden">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <section id="screen-step4" class="app-screen space-y-5 hidden">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="bg-primary-100 text-primary-700 px-2 py-0.5 rounded text-xs font-bold">4단계</span>
-                    <span id="step4-student-badge" class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-bold">학생 ① 작성</span>
+                    <span class="bg-primary-100 text-primary-700 px-2.5 py-1 rounded-md text-xs font-bold">4단계</span>
+                    <span id="step4-student-badge" class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-bold border border-slate-200">학생 ① 작성</span>
                 </div>
-                <h2 class="font-bold text-sm text-slate-800">성취수준 선택 및 성취기준·특기사항 작성</h2>
-                <p class="text-xs text-slate-600">성취수준(A/B/C)을 결정하고 교사 작성 특기사항을 완성하세요.</p>
+                <h2 class="font-bold text-sm sm:text-base text-slate-800">성취수준 선택 및 성취기준·특기사항 작성</h2>
+                <p class="text-xs sm:text-sm text-slate-600">성취수준(A/B/C)을 결정하고 교사 작성 특기사항을 완성하세요.</p>
             </div>
 
             <!-- Unit Selector Tabs -->
-            <div id="step4-unit-tabs" class="flex space-x-1 bg-slate-200 p-1 rounded-xl text-xs font-bold overflow-x-auto">
+            <div id="step4-unit-tabs" class="flex space-x-2 bg-slate-200 p-1.5 rounded-2xl text-xs font-bold overflow-x-auto">
                 <!-- Injected via JS -->
             </div>
 
             <!-- Student Switcher -->
-            <div class="flex space-x-1 bg-slate-200 p-1 rounded-xl">
-                <button onclick="setStep4Student(1)" id="step4-tab-1" class="step4-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition bg-white text-primary-600 shadow-sm">학생 ①</button>
-                <button onclick="setStep4Student(2)" id="step4-tab-2" class="step4-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition text-slate-600">학생 ②</button>
-                <button onclick="setStep4Student(3)" id="step4-tab-3" class="step4-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition text-slate-600">학생 ③</button>
+            <div class="flex space-x-2 bg-slate-200 p-1.5 rounded-2xl max-w-md">
+                <button onclick="setStep4Student(1)" id="step4-tab-1" class="step4-tab flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-primary-600 shadow-sm">학생 ①</button>
+                <button onclick="setStep4Student(2)" id="step4-tab-2" class="step4-tab flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600">학생 ②</button>
+                <button onclick="setStep4Student(3)" id="step4-tab-3" class="step4-tab flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600">학생 ③</button>
             </div>
 
-            <!-- Grade Selection (A/B/C) -->
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                <label class="block text-xs font-bold text-slate-800">
-                    <i class="fa-solid fa-award text-amber-500 mr-1"></i>선택 단원의 성취수준 결정
-                </label>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="selectGrade('A')" id="grade-btn-A" class="grade-choice-btn border-2 border-slate-200 hover:border-primary-500 rounded-xl py-3 text-center transition flex flex-col items-center justify-center">
-                        <span class="text-lg font-black text-emerald-600">A</span>
-                        <span class="text-[10px] text-slate-500">높은 성취</span>
-                    </button>
-                    <button onclick="selectGrade('B')" id="grade-btn-B" class="grade-choice-btn border-2 border-slate-200 hover:border-primary-500 rounded-xl py-3 text-center transition flex flex-col items-center justify-center">
-                        <span class="text-lg font-black text-blue-600">B</span>
-                        <span class="text-[10px] text-slate-500">일반적 성취</span>
-                    </button>
-                    <button onclick="selectGrade('C')" id="grade-btn-C" class="grade-choice-btn border-2 border-slate-200 hover:border-primary-500 rounded-xl py-3 text-center transition flex flex-col items-center justify-center">
-                        <span class="text-lg font-black text-amber-600">C</span>
-                        <span class="text-[10px] text-slate-500">조력 필요</span>
-                    </button>
+            <!-- Step 4 Responsive Split View: 1 Col on phone, 2 Col on Laptop (Left: Reference Card, Right: Controls & Writing Box) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                
+                <!-- Left Column (4 cols on lg): Reference Performance Card -->
+                <div class="lg:col-span-5 space-y-4">
+                    <!-- Student Performance & Teacher Observation Reference Card -->
+                    <div id="step4-student-ref-card" class="bg-blue-50/80 p-4 rounded-2xl border border-blue-200 text-xs space-y-3 shadow-sm h-full">
+                        <!-- Dynamically Injected Student Performance & Teacher Observation -->
+                    </div>
+                </div>
+
+                <!-- Right Column (7 cols on lg): Grade Choice, Written Comment Input, Merged Preview -->
+                <div class="lg:col-span-7 space-y-4">
+                    
+                    <!-- Grade Selection (A/B/C) -->
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <label class="block text-xs sm:text-sm font-bold text-slate-800">
+                            <i class="fa-solid fa-award text-amber-500 mr-1.5"></i>선택 단원의 성취수준 결정
+                        </label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectGrade('A')" id="grade-btn-A" class="grade-choice-btn border-2 border-slate-200 hover:border-primary-500 rounded-2xl py-3 text-center transition flex flex-col items-center justify-center">
+                                <span class="text-xl sm:text-2xl font-black text-emerald-600">A</span>
+                                <span class="text-[11px] text-slate-500">높은 성취</span>
+                            </button>
+                            <button onclick="selectGrade('B')" id="grade-btn-B" class="grade-choice-btn border-2 border-slate-200 hover:border-primary-500 rounded-2xl py-3 text-center transition flex flex-col items-center justify-center">
+                                <span class="text-xl sm:text-2xl font-black text-blue-600">B</span>
+                                <span class="text-[11px] text-slate-500">일반적 성취</span>
+                            </button>
+                            <button onclick="selectGrade('C')" id="grade-btn-C" class="grade-choice-btn border-2 border-slate-200 hover:border-primary-500 rounded-2xl py-3 text-center transition flex flex-col items-center justify-center">
+                                <span class="text-xl sm:text-2xl font-black text-amber-600">C</span>
+                                <span class="text-[11px] text-slate-500">조력 필요</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Status Indicator of Teacher Written Comments per Unit -->
+                    <div id="step4-unit-status-bar" class="bg-slate-100 p-3 rounded-2xl text-xs space-y-1.5 border border-slate-200">
+                        <div class="font-bold text-slate-700 flex justify-between items-center">
+                            <span><i class="fa-solid fa-pen-nib text-primary-600 mr-1.5"></i>단원별 교사 직접 작성 현황</span>
+                            <span id="teacher-written-count-badge" class="text-[11px] text-primary-700 font-bold bg-primary-100 px-2.5 py-0.5 rounded-full border border-primary-200">0/1 작성됨</span>
+                        </div>
+                        <div id="teacher-written-units-list" class="flex flex-wrap gap-1.5 pt-1">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Writing Box for Selected Unit -->
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+                        <div class="flex justify-between items-center">
+                            <label for="step4-comment" class="block text-xs sm:text-sm font-bold text-slate-800">
+                                <i class="fa-solid fa-feather text-accent-500 mr-1.5"></i>[선택 단원] 교사 작성 성취기준 및 특기사항 입력
+                            </label>
+                            <span id="step4-char-count" class="text-[11px] font-bold text-slate-400">0 자</span>
+                        </div>
+                        <textarea id="step4-comment" rows="4" oninput="saveStep4Comment()" placeholder="상단 수행 및 관찰 내용을 참고하여, 선택한 단원의 관찰 결과를 선생님의 문장으로 직접 작성하세요..." class="w-full text-xs sm:text-sm p-3.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none"></textarea>
+                    </div>
+
+                    <!-- Combined Preview Box -->
+                    <div class="bg-emerald-50/70 p-4 rounded-2xl border-2 border-emerald-300 shadow-sm space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="block text-xs sm:text-sm font-bold text-emerald-900">
+                                <i class="fa-solid fa-layer-group text-emerald-600 mr-1.5"></i>단원별 작성 내용 종합 미리보기
+                            </span>
+                            <span id="step4-merged-char-count" class="text-xs text-emerald-700 font-bold">0 자</span>
+                        </div>
+                        <p class="text-[11px] text-emerald-700 -mt-1">선택된 단원들에서 작성한 성취수준 및 특기사항이 이곳에 자동으로 합쳐져 표시됩니다.</p>
+                        <p id="step4-merged-preview" class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium bg-white p-3 rounded-xl border border-emerald-200 whitespace-pre-line"></p>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Student Performance & Teacher Observation Reference Card -->
-            <div id="step4-student-ref-card" class="bg-blue-50/80 p-3.5 rounded-2xl border border-blue-200 text-xs space-y-2 shadow-sm">
-                <!-- Dynamically Injected Student Performance & Teacher Observation -->
-            </div>
-
-            <!-- Status Indicator of Teacher Written Comments per Unit -->
-            <div id="step4-unit-status-bar" class="bg-slate-100 p-2.5 rounded-xl text-[11px] space-y-1 border border-slate-200">
-                <div class="font-bold text-slate-700 flex justify-between items-center">
-                    <span><i class="fa-solid fa-pen-nib text-primary-600 mr-1"></i>단원별 교사 직접 작성 현황</span>
-                    <span id="teacher-written-count-badge" class="text-[10px] text-primary-700 font-bold bg-primary-100 px-2 py-0.5 rounded-full">0/1 작성됨</span>
-                </div>
-                <div id="teacher-written-units-list" class="flex flex-wrap gap-1 pt-1">
-                    <!-- Injected via JS -->
-                </div>
-            </div>
-
-            <!-- Writing Box for Selected Unit -->
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                <div class="flex justify-between items-center">
-                    <label for="step4-comment" class="block text-xs font-bold text-slate-800">
-                        <i class="fa-solid fa-feather text-accent-500 mr-1"></i>[선택 단원] 교사 작성 성취기준 및 특기사항 입력
-                    </label>
-                    <span id="step4-char-count" class="text-[10px] text-slate-400">0 자</span>
-                </div>
-                <textarea id="step4-comment" rows="3.5" oninput="saveStep4Comment()" placeholder="상단 수행 및 관찰 내용을 참고하여, 선택한 단원의 관찰 결과를 선생님의 문장으로 직접 작성하세요..." class="w-full text-xs p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none"></textarea>
-            </div>
-
-            <!-- Combined Preview Box: merges the teacher-written comments across all selected units for current student -->
-            <div class="bg-emerald-50/60 p-4 rounded-2xl border-2 border-emerald-300 shadow-sm space-y-2">
-                <div class="flex justify-between items-center">
-                    <span class="block text-xs font-bold text-emerald-900">
-                        <i class="fa-solid fa-layer-group text-emerald-600 mr-1"></i>단원별 작성 내용 종합 미리보기
-                    </span>
-                    <span id="step4-merged-char-count" class="text-[10px] text-emerald-700 font-bold">0 자</span>
-                </div>
-                <p class="text-[10px] text-emerald-700 -mt-1">선택된 단원들에서 작성한 성취수준 및 특기사항이 이곳에 자동으로 합쳐져 표시됩니다.</p>
-                <p id="step4-merged-preview" class="text-xs text-slate-800 leading-relaxed font-medium bg-white p-2.5 rounded-lg border border-emerald-200 whitespace-pre-line"></p>
-            </div>
-
-            <div class="flex space-x-2 pt-2">
-                <button onclick="goToStep(3)" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-3 rounded-xl transition text-xs">
+            <div class="flex space-x-3 pt-2">
+                <button onclick="goToStep(3)" class="w-1/3 sm:w-32 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3.5 px-4 rounded-xl transition text-xs sm:text-sm">
                     이전
                 </button>
-                <button onclick="goToStep(5)" class="w-2/3 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-4 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm touch-action-manipulation">
+                <button onclick="goToStep(5)" class="w-2/3 flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-5 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm sm:text-base touch-action-manipulation">
                     <span>참고 결과와 비교하기</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -368,37 +422,38 @@
 
 
         <!-- SCREEN 5: STEP 5 (Comparison & Final Editing) -->
-        <section id="screen-step5" class="app-screen space-y-4 hidden">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <section id="screen-step5" class="app-screen space-y-5 hidden">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="bg-primary-100 text-primary-700 px-2 py-0.5 rounded text-xs font-bold">5단계</span>
-                    <span id="step5-student-badge" class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-bold">학생 ① 비교</span>
+                    <span class="bg-primary-100 text-primary-700 px-2.5 py-1 rounded-md text-xs font-bold">5단계</span>
+                    <span id="step5-student-badge" class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full font-bold border border-slate-200">학생 ① 비교</span>
                 </div>
-                <h2 class="font-bold text-sm text-slate-800">연수용 참고 예시와 비교 및 최종 확정</h2>
+                <h2 class="font-bold text-sm sm:text-base text-slate-800">연수용 참고 예시와 비교 및 최종 확정</h2>
+                <p class="text-xs sm:text-sm text-slate-600">작성한 문장을 연수 참고 예시와 비교해보고 최종 성취기준·특기사항 문장을 다듬으세요.</p>
             </div>
 
             <!-- Unit Selector Tabs -->
-            <div id="step5-unit-tabs" class="flex space-x-1 bg-slate-200 p-1 rounded-xl text-xs font-bold overflow-x-auto">
+            <div id="step5-unit-tabs" class="flex space-x-2 bg-slate-200 p-1.5 rounded-2xl text-xs font-bold overflow-x-auto">
                 <!-- Injected via JS -->
             </div>
 
             <!-- Student Switcher -->
-            <div class="flex space-x-1 bg-slate-200 p-1 rounded-xl">
-                <button onclick="setStep5Student(1)" id="step5-tab-1" class="step5-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition bg-white text-primary-600 shadow-sm">학생 ①</button>
-                <button onclick="setStep5Student(2)" id="step5-tab-2" class="step5-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition text-slate-600">학생 ②</button>
-                <button onclick="setStep5Student(3)" id="step5-tab-3" class="step5-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition text-slate-600">학생 ③</button>
+            <div class="flex space-x-2 bg-slate-200 p-1.5 rounded-2xl max-w-md">
+                <button onclick="setStep5Student(1)" id="step5-tab-1" class="step5-tab flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-primary-600 shadow-sm">학생 ①</button>
+                <button onclick="setStep5Student(2)" id="step5-tab-2" class="step5-tab flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600">학생 ②</button>
+                <button onclick="setStep5Student(3)" id="step5-tab-3" class="step5-tab flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600">학생 ③</button>
             </div>
 
             <!-- Comparison Container -->
-            <div id="step5-comparison-container" class="space-y-3">
+            <div id="step5-comparison-container" class="space-y-4">
                 <!-- Injected via JS -->
             </div>
 
-            <div class="flex space-x-2 pt-2">
-                <button onclick="goToStep(4)" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-3 rounded-xl transition text-xs">
+            <div class="flex space-x-3 pt-2">
+                <button onclick="goToStep(4)" class="w-1/3 sm:w-32 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3.5 px-4 rounded-xl transition text-xs sm:text-sm">
                     이전
                 </button>
-                <button onclick="goToStep(6)" class="w-2/3 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-4 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm touch-action-manipulation">
+                <button onclick="goToStep(6)" class="w-2/3 flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-5 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm sm:text-base touch-action-manipulation">
                     <span>실습 성찰하기</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
@@ -407,37 +462,38 @@
 
 
         <!-- SCREEN 6: STEP 6 (Reflections) -->
-        <section id="screen-step6" class="app-screen space-y-4 hidden">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <section id="screen-step6" class="app-screen space-y-5 hidden">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
                 <div class="flex justify-between items-center">
-                    <span class="bg-primary-100 text-primary-700 px-2 py-0.5 rounded text-xs font-bold">6단계</span>
+                    <span class="bg-primary-100 text-primary-700 px-2.5 py-1 rounded-md text-xs font-bold">6단계</span>
                     <span class="text-xs text-slate-500 font-medium">실습 성찰</span>
                 </div>
-                <h2 class="font-bold text-sm text-slate-800">단원 연계 작성 종합 성찰</h2>
+                <h2 class="font-bold text-sm sm:text-base text-slate-800">단원 연계 작성 종합 성찰</h2>
+                <p class="text-xs sm:text-sm text-slate-600">실습을 마치며 학생 성장을 기록하기 위한 교사의 관찰 노하우 및 시사점을 기록해보세요.</p>
             </div>
 
-            <div id="reflection-questions" class="space-y-3">
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                    <label class="block text-xs font-bold text-slate-800">
-                        질문 1. 학생 개별 성취 특성을 드러내기 위해 교사가 중점적으로 기재해야 할 요소는?
+            <div id="reflection-questions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <label class="block text-xs sm:text-sm font-bold text-slate-800 leading-snug">
+                        <i class="fa-solid fa-circle-question text-primary-600 mr-1.5"></i>질문 1. 학생 개별 성취 특성을 드러내기 위해 교사가 중점적으로 기재해야 할 요소는?
                     </label>
-                    <textarea id="ref-q1" oninput="saveReflection()" rows="2" class="w-full text-xs p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none" placeholder="답변을 입력하세요..."></textarea>
+                    <textarea id="ref-q1" oninput="saveReflection()" rows="3" class="w-full text-xs sm:text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none" placeholder="답변을 입력하세요..."></textarea>
                 </div>
 
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                    <label class="block text-xs font-bold text-slate-800">
-                        질문 2. 학기 중 학생의 학습활동 및 성장을 꾸준히 기록하는 효과적인 관찰 노하우는?
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <label class="block text-xs sm:text-sm font-bold text-slate-800 leading-snug">
+                        <i class="fa-solid fa-circle-question text-primary-600 mr-1.5"></i>질문 2. 학기 중 학생의 학습활동 및 성장을 꾸준히 기록하는 효과적인 관찰 노하우는?
                     </label>
-                    <textarea id="ref-q2" oninput="saveReflection()" rows="2" class="w-full text-xs p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none" placeholder="답변을 입력하세요..."></textarea>
+                    <textarea id="ref-q2" oninput="saveReflection()" rows="3" class="w-full text-xs sm:text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none" placeholder="답변을 입력하세요..."></textarea>
                 </div>
             </div>
 
-            <div class="flex space-x-2 pt-2">
-                <button onclick="goToStep(5)" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 px-3 rounded-xl transition text-xs">
+            <div class="flex space-x-3 pt-2">
+                <button onclick="goToStep(5)" class="w-1/3 sm:w-32 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3.5 px-4 rounded-xl transition text-xs sm:text-sm">
                     이전
                 </button>
-                <button onclick="generateReport()" class="w-2/3 bg-accent-500 hover:bg-accent-600 text-white font-bold py-3.5 px-4 rounded-xl shadow transition flex items-center justify-center space-x-2 text-sm touch-action-manipulation">
-                    <i class="fa-solid fa-file-invoice"></i>
+                <button onclick="generateReport()" class="w-2/3 flex-1 bg-accent-500 hover:bg-accent-600 text-white font-bold py-3.5 px-5 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm sm:text-base touch-action-manipulation">
+                    <i class="fa-solid fa-file-invoice text-lg"></i>
                     <span>종합 보고서 생성</span>
                 </button>
             </div>
@@ -445,52 +501,53 @@
 
 
         <!-- SCREEN REPORT: FINAL COMPREHENSIVE REPORT -->
-        <section id="screen-report" class="app-screen space-y-4 hidden">
+        <section id="screen-report" class="app-screen space-y-5 hidden max-w-4xl mx-auto">
             <!-- Action Toolbar -->
-            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-3 no-print">
-                <div class="text-xs font-bold text-slate-700 flex items-center justify-between">
-                    <span><i class="fa-solid fa-file-check text-primary-600 mr-1"></i>최종 종합 실습 결과보고서</span>
-                    <button onclick="goToStep(6)" class="text-slate-500 hover:text-slate-700 text-xs font-medium">
-                        <i class="fa-solid fa-pen-to-square"></i> 성찰 수정
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 no-print">
+                <div class="text-xs sm:text-sm font-bold text-slate-800 flex items-center justify-between border-b pb-2">
+                    <span><i class="fa-solid fa-file-check text-primary-600 mr-1.5"></i>최종 종합 실습 결과보고서</span>
+                    <button onclick="goToStep(6)" class="text-slate-500 hover:text-slate-800 text-xs font-semibold flex items-center space-x-1">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>성찰 수정</span>
                     </button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="downloadPDF()" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center space-x-1">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <button onclick="downloadPDF()" class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-3 rounded-xl text-xs sm:text-sm transition flex items-center justify-center space-x-1.5 shadow-sm">
                         <i class="fa-solid fa-file-pdf"></i>
                         <span>PDF 저장</span>
                     </button>
-                    <button onclick="printReport()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center space-x-1">
+                    <button onclick="printReport()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 px-3 rounded-xl text-xs sm:text-sm transition flex items-center justify-center space-x-1.5 shadow-sm">
                         <i class="fa-solid fa-print"></i>
                         <span>보고서 인쇄</span>
                     </button>
-                    <button onclick="copyFinalComments()" class="bg-secondary-600 hover:bg-secondary-700 text-white font-bold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center space-x-1">
+                    <button onclick="copyFinalComments()" class="bg-secondary-600 hover:bg-secondary-700 text-white font-bold py-3 px-3 rounded-xl text-xs sm:text-sm transition flex items-center justify-center space-x-1.5 shadow-sm">
                         <i class="fa-solid fa-copy"></i>
-                        <span>성취수준 및 특기사항 복사</span>
+                        <span>특기사항 복사</span>
                     </button>
-                    <button onclick="copyFullReportText()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center space-x-1">
+                    <button onclick="copyFullReportText()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-3 rounded-xl text-xs sm:text-sm transition flex items-center justify-center space-x-1.5">
                         <i class="fa-solid fa-paste"></i>
-                        <span>보고서 전체 복사</span>
+                        <span>전체 내용 복사</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Report Target Paper -->
-            <div id="report-paper" class="bg-white p-5 rounded-2xl border border-slate-300 shadow-md space-y-5 text-xs text-slate-800 print-card">
+            <!-- Report Target Paper (A4 Style Display) -->
+            <div id="report-paper" class="bg-white p-6 sm:p-10 rounded-2xl border border-slate-300 shadow-lg space-y-6 text-xs sm:text-sm text-slate-800 print-card">
                 <!-- Header -->
-                <div class="border-b-2 border-primary-600 pb-3 text-center space-y-1">
-                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">초등학교 교사 연수 실습 종합 결과물</span>
-                    <h1 class="text-base font-bold text-slate-900 leading-snug">4학년 1학기 국어 교과학습발달상황 종합 실습 보고서</h1>
+                <div class="border-b-2 border-primary-600 pb-4 text-center space-y-1.5">
+                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider block">초등학교 교사 연수 실습 종합 결과물</span>
+                    <h1 class="text-lg sm:text-xl font-black text-slate-900 leading-snug">4학년 1학기 국어 교과학습발달상황 종합 실습 보고서</h1>
                 </div>
 
                 <!-- 1. Info & Standard -->
-                <div id="report-standard-section" class="space-y-2">
+                <div id="report-standard-section" class="space-y-3">
                     <!-- Injected via JS -->
                 </div>
 
                 <!-- 2. Integrated Student Synthesis Section -->
                 <div class="space-y-3">
-                    <h3 class="font-bold text-xs text-emerald-800 border-l-3 border-emerald-600 pl-2">2. [학기말 종합] 학생별 연계 종합 교과학습발달상황</h3>
+                    <h3 class="font-bold text-xs sm:text-sm text-emerald-800 border-l-4 border-emerald-600 pl-2.5">2. [학기말 종합] 학생별 연계 종합 교과학습발달상황</h3>
                     <div id="report-comprehensive-student-section" class="space-y-3">
                         <!-- Injected via JS -->
                     </div>
@@ -498,21 +555,21 @@
 
                 <!-- 3. Detailed Unit Results -->
                 <div class="space-y-3 pt-2">
-                    <h3 class="font-bold text-xs text-primary-700 border-l-3 border-primary-600 pl-2">3. 단원별 세부분석 및 평가 기록</h3>
+                    <h3 class="font-bold text-xs sm:text-sm text-primary-800 border-l-4 border-primary-600 pl-2.5">3. 단원별 세부분석 및 평가 기록</h3>
                     <div id="report-student-section" class="space-y-3">
                         <!-- Injected via JS -->
                     </div>
                 </div>
 
                 <!-- 4. Reflections -->
-                <div class="space-y-2 border-t border-slate-200 pt-3">
-                    <h3 class="font-bold text-xs text-primary-700 border-l-3 border-primary-600 pl-2">4. 실습 종합 성찰</h3>
-                    <div id="report-reflections-section" class="space-y-2 text-[11px] bg-slate-50 p-3 rounded-lg">
+                <div class="space-y-3 border-t border-slate-200 pt-4">
+                    <h3 class="font-bold text-xs sm:text-sm text-primary-800 border-l-4 border-primary-600 pl-2.5">4. 실습 종합 성찰</h3>
+                    <div id="report-reflections-section" class="space-y-2 text-xs sm:text-sm bg-slate-50 p-4 rounded-xl border border-slate-200">
                         <!-- Injected via JS -->
                     </div>
                 </div>
 
-                <div class="text-center text-[10px] text-slate-400 pt-2 border-t border-slate-100">
+                <div class="text-center text-[11px] text-slate-400 pt-3 border-t border-slate-100">
                     본 보고서는 초등학교 교사 연수용 실습 웹앱에서 교사 작성 문장을 기반으로 연계·생성된 종합 기록물입니다.
                 </div>
             </div>
@@ -522,32 +579,32 @@
 
     <!-- GUIDE MODAL -->
     <div id="guide-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-sm w-full max-h-[85vh] overflow-y-auto p-5 space-y-4 shadow-xl text-xs">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-book-open text-primary-600 mr-1.5"></i>단원 연계 실습 가이드</h3>
-                <button onclick="toggleModal('guide-modal', false)" class="text-slate-400 hover:text-slate-600 text-base">
+        <div class="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 space-y-5 shadow-2xl text-xs sm:text-sm">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-base text-slate-800"><i class="fa-solid fa-book-open text-primary-600 mr-2"></i>단원 연계 실습 가이드</h3>
+                <button onclick="toggleModal('guide-modal', false)" class="text-slate-400 hover:text-slate-600 text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
             
-            <div class="space-y-3 text-slate-600 leading-relaxed">
-                <p class="font-bold text-slate-800">■ 교사 직접 작성 문장 실습 가이드</p>
-                <div class="bg-primary-50 p-3 rounded-xl border border-primary-100 space-y-1">
+            <div class="space-y-3.5 text-slate-600 leading-relaxed">
+                <p class="font-bold text-slate-800 text-sm">■ 교사 직접 작성 문장 실습 가이드</p>
+                <div class="bg-primary-50 p-4 rounded-2xl border border-primary-100 space-y-1.5">
                     <p>• <b>1단계:</b> 단원을 1개~최대 3개 선택합니다.</p>
-                    <p>• <b>2단계:</b> 선택한 단원의 성취기준 및 수업·평가 주안점을 확인합니다. (좌측 단원부터 자동 표시)</p>
+                    <p>• <b>2단계:</b> 선택한 단원의 성취기준 및 수업·평가 주안점을 확인합니다.</p>
                     <p>• <b>4단계:</b> 단원별 성취수준(A/B/C)을 결정하고, 학생 수행과 관찰 기록을 바탕으로 교사 성취기준 및 특기사항을 직접 작성합니다.</p>
                     <p>• <b>종합 미리보기:</b> 각 단원에서 작성한 문장이 자동으로 결합되어 학기말 종합 특기사항을 미리 확인할 수 있습니다.</p>
                 </div>
 
-                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 space-y-1 text-amber-900">
-                    <p class="font-bold flex items-center"><i class="fa-solid fa-star mr-1 text-amber-600"></i>학교생활기록부 작성 가이드</p>
-                    <p class="text-[11px] leading-relaxed">
+                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-1.5 text-amber-900">
+                    <p class="font-bold flex items-center text-sm"><i class="fa-solid fa-star mr-1.5 text-amber-600"></i>학교생활기록부 작성 가이드</p>
+                    <p class="text-xs sm:text-sm leading-relaxed">
                         교과학습발달상황은 단편적 점수 기록을 넘어, 학생의 단원별 성장 과정과 학습 특성을 누적 종합하여 교사 본인의 주관과 관찰에 근거한 개별화된 특기사항으로 기술해야 합니다.
                     </p>
                 </div>
             </div>
 
-            <button onclick="toggleModal('guide-modal', false)" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl transition">
+            <button onclick="toggleModal('guide-modal', false)" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl transition text-xs sm:text-sm">
                 확인 및 닫기
             </button>
         </div>
@@ -555,21 +612,20 @@
 
     <!-- RESET MODAL -->
     <div id="reset-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-xs w-full p-5 space-y-4 shadow-xl text-center">
-            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-xl">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center">
+            <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto text-2xl">
                 <i class="fa-solid fa-rotate-right"></i>
             </div>
-            <div class="space-y-1">
-                <h3 class="font-bold text-slate-800 text-sm">실습 내용 초기화</h3>
-                <p class="text-xs text-slate-600">모든 단원의 실습 내용 및 저장 상태가 삭제됩니다. 진행하시겠습니까?</p>
+            <div class="space-y-1.5">
+                <h3 class="font-bold text-slate-800 text-base">실습 내용 초기화</h3>
+                <p class="text-xs sm:text-sm text-slate-600">모든 단원의 실습 내용 및 저장 상태가 삭제됩니다. 진행하시겠습니까?</p>
             </div>
-            <div class="flex space-x-2 pt-1">
-                <button onclick="toggleModal('reset-modal', false)" class="flex-1 bg-slate-100 text-slate-700 text-xs font-bold py-2.5 rounded-xl">취소</button>
-                <button onclick="executeReset()" class="flex-1 bg-rose-600 text-white text-xs font-bold py-2.5 rounded-xl">초기화 실행</button>
+            <div class="flex space-x-2 pt-2">
+                <button onclick="toggleModal('reset-modal', false)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-bold py-3 rounded-xl transition">취소</button>
+                <button onclick="executeReset()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-bold py-3 rounded-xl transition shadow">초기화 실행</button>
             </div>
         </div>
     </div>
-
 
     <script>
         // Assessment Database
@@ -623,24 +679,24 @@
                 focus: "관찰 대상의 특성, 관찰 절차 및 결과가 정확한 표현과 접속어로 잘 드러나도록 보고서를 구성하는지 평가함.",
                 students: {
                     1: {
-                        scoreDetail: "관찰 절차 기술 3/3 | 관찰 결과 정확성 3/3 | 어휘 및 보고격식 3/3 (총 9점 / 잘함)",
-                        perfResult: "배추흰나비 애벌레의 성장 과정을 날짜별 절차와 변화 모습으로 구분하고, 정확한 관찰 어휘를 사용하여 깔끔한 보고서로 완성함.",
-                        artifact: "배추흰나비 관찰 보고서 및 세부 스케치 완성.",
-                        observation: "돋보기를 활용해 꼼꼼히 관찰하고 즉시 메모함.",
-                        participation: "모둠 관찰 도구 정리에 모범을 보임.",
-                        growth: "단순 '예쁘다' 표현에서 '길이가 3mm 늘어남' 등 객관적 관찰 어휘로 발전함.",
-                        refGrade: "A",
-                        refSentence: "대상의 변화 과정을 날짜별 절차에 따라 정확한 관찰 어휘를 활용하여 체계적인 보고하는 글을 작성함."
+                        scoreDetail: "관찰 절차 기술 3/3 | 관찰 결과 정확성 2/3 | 어휘 및 보고격식 2/3 (총 7점 / 보통)",
+                        perfResult: "배추흰나비 애벌레의 성장 과정을 시간의 흐름에 맞춰 성실하게 기록하였으며, 제시된 안내 틀에 따라 관찰 보고서를 완성함.",
+                        artifact: "관찰 보고서 양식지 완성.",
+                        observation: "정해진 관찰 시간에 집중하여 대상의 상태를 기록함.",
+                        participation: "관찰 및 기록 활동에 차분히 임함.",
+                        growth: "그림 중심 기록 방식에서 점차 핵심 변화를 문장 형태로 풀어서 쓰는 기량을 키움.",
+                        refGrade: "B",
+                        refSentence: "배추흰나비의 성장 절차와 주요 특징을 양식에 맞추어 차분하게 기록하고 보고하는 글을 무난히 완성함."
                     },
                     2: {
-                        scoreDetail: "관찰 절차 기술 3/3 | 관찰 결과 정확성 2/3 | 어휘 및 보고격식 2/3 (총 7점 / 보통)",
-                        perfResult: "배추흰나비 관찰 순서에 따라 있었던 변화를 정리하여 작성함.",
-                        artifact: "관찰 양식 보고서 완성.",
-                        observation: "관찰 양식에 맞추어 기록함.",
-                        participation: "관찰 활동에 진지하게 임함.",
-                        growth: "그림 위주 기록에서 문장 형태의 결과 기록으로 발전함.",
-                        refGrade: "B",
-                        refSentence: "관찰 대상의 절차와 결과를 양식에 맞추어 성실하게 기록하여 보고하는 글을 씀."
+                        scoreDetail: "관찰 절차 기술 3/3 | 관찰 결과 정확성 3/3 | 어휘 및 보고격식 3/3 (총 9점 / 잘함)",
+                        perfResult: "배추흰나비의 부화부터 번데기 변태 과정까지 관찰 절차와 세부 변화를 정확한 어휘와 연결어를 사용하여 독창적이고 명확한 보고서로 서술함.",
+                        artifact: "배추흰나비 정밀 관찰 보고서 및 관찰 일지 세트 완성.",
+                        observation: "돋보기와 렌즈를 활용하여 미세한 신체 구조 변화까지 스케치하고 상세히 기록함.",
+                        participation: "모둠 내 관찰 기록 반장으로서 동료들의 자료 수집을 적극 이끎.",
+                        growth: "단순한 묘사를 넘어 원인과 결과의 접속 표현을 효과적으로 적용하여 체계적인 보고서 작성 능력을 보여줌.",
+                        refGrade: "A",
+                        refSentence: "관찰 대상의 변화 과정을 체계적 절차에 따라 정확한 어휘와 표현을 활용하여 논리적이고 풍부한 보고서로 작성함."
                     },
                     3: {
                         scoreDetail: "관찰 절차 기술 1/3 | 관찰 결과 정확성 2/3 | 어휘 및 보고격식 1/3 (총 4점 / 노력 요함)",
@@ -673,24 +729,24 @@
                         refSentence: "국어사전의 등재 원리를 바르게 이해하고 문맥에 따라 다르게 쓰이는 낱말의 정확한 뜻을 사전에서 찾아 명확히 서술함."
                     },
                     2: {
-                        scoreDetail: "사전 검색 능력 3/3 | 다의어 문맥 구분 2/3 | 풀이 작성 2/3 (총 7점 / 보통)",
-                        perfResult: "국어사전에서 주어진 낱말을 찾아 기본 뜻을 적고, 문장 예시를 작성함.",
-                        artifact: "낱말 뜻 찾기 활동지 완성.",
-                        observation: "차례대로 사전 페이지를 넘겨가며 탐색함.",
-                        participation: "주어진 과제를 묵묵히 수행함.",
-                        growth: "사전 찾기 속도가 점차 빨라지는 성장을 보임.",
-                        refGrade: "B",
-                        refSentence: "국어사전 탐색 방법을 활용하여 낱말의 기본 뜻을 찾아 기술하고 문맥을 이해해 보려고 노력함."
+                        scoreDetail: "사전 검색 능력 1/3 | 다의어 문맥 구분 1/3 | 풀이 작성 2/3 (총 4점 / 노력 요함)",
+                        perfResult: "국어사전의 자음·모음 배열 순서 검색에 주저함이 있어, 교사의 단어 검색 안내 보조 자료 및 개별 지도를 통해 낱말을 찾아 작성함.",
+                        artifact: "교사 도움으로 작성한 다의어 찾기 활동지.",
+                        observation: "사전에서 첫 자음을 찾는 데 시간이 다소 걸림.",
+                        participation: "교사의 순서 설명에 집중하며 따라 함.",
+                        growth: "사전 찾기 과정을 단계별로 시도해 보며 자음 순서를 익히는 노력을 보임.",
+                        refGrade: "C",
+                        refSentence: "국어사전에서 낱말을 탐색할 때 교사의 개별적 순서 안내 조력이 요구되며, 찾아낸 낱말의 뜻을 차분히 따라 읽고 기록함."
                     },
                     3: {
-                        scoreDetail: "사전 검색 능력 1/3 | 다의어 문맥 구분 2/3 | 풀이 작성 1/3 (총 4점 / 노력 요함)",
-                        perfResult: "사전 자음 순서 찾기에 어려움이 있어 교사의 단계별 순서 안내 조력을 받아 낱말을 찾음.",
-                        artifact: "도움 받아 완성한 낱말 카드.",
-                        observation: "모음 순서에서 자주 머뭇거림.",
-                        participation: "교사의 힌트에 집중함.",
-                        growth: "교사의 도움으로 첫 자음 자리를 찾는 법을 익힘.",
-                        refGrade: "C",
-                        refSentence: "국어사전에서 낱말을 검색하는 데 교사의 단계별 도움을 필요로 하며, 찾아낸 뜻을 차분히 읽어봄."
+                        scoreDetail: "사전 검색 능력 2/3 | 다의어 문맥 구분 3/3 | 풀이 작성 2/3 (총 7점 / 보통)",
+                        perfResult: "국어사전의 기본 활용 순서를 잘 이해하여 다의어의 여러 가지 뜻 중 문맥에 맞는 적절한 의미를 선택하고 풀이를 성실히 작성함.",
+                        artifact: "다의어 뜻 구분 정리지 완성.",
+                        observation: "차분히 사전을 넘기며 문장에 적합한 번호의 의미를 검토함.",
+                        participation: "과제 해결 과정에서 주도적으로 탐색함.",
+                        growth: "단순 낱말 검색 수준에서 벗어나 다의어가 사용된 문장의 뜻을 서로 비교해 보는 발전적 시도를 함.",
+                        refGrade: "B",
+                        refSentence: "국어사전 찾는 방법을 활용하여 문맥 속 낱말의 다의적 의미를 구분해 내고 주어진 양식에 뜻을 바르게 정리함."
                     }
                 }
             },
@@ -743,24 +799,24 @@
                 focus: "자신의 경험을 원인과 결과(접속어 '왜냐하면', '그래서' 등)가 드러나도록 시간 순서에 맞게 정리하여 발표하고, 친구의 발표를 집중하여 듣는지 평가함.",
                 students: {
                     1: {
-                        scoreDetail: "순서 정리 3/3 | 원인과 결과 명확성 3/3 | 자연스러운 연결 3/3 (총 9점 / 잘함)",
-                        perfResult: "축구 경기에서 첫 골을 넣었던 경험을 사건의 순서와 원인·결과('연습을 열심히 했기 때문에', '그래서 골을 넣을 수 있었다')가 명확히 드러나게 발표함.",
-                        artifact: "「경험 말하기 활동지」 - 연결 표현 3회 이상 활용.",
-                        observation: "발표 메모를 스스로 작성하고, 친구들의 발표 시 집중 청취함.",
-                        participation: "모둠 발표 시 원인과 결과를 곁들여 명확히 답변함.",
-                        growth: "초기 나열식 발표에서 피드백을 수용하여 원인-결과 연결어를 사용해 말하는 성장을 보임.",
-                        refGrade: "A",
-                        refSentence: "원인과 결과의 관계를 고려하여 자신이 겪은 경험을 시간의 흐름에 따라 논리적으로 정리하여 발표하며, 연결 표현을 보완하여 자연스럽게 말하는 성장이 돋보임."
+                        scoreDetail: "순서 정리 3/3 | 원인과 결과 명확성 2/3 | 자연스러운 연결 2/3 (총 7점 / 보통)",
+                        perfResult: "자신이 경험한 운동회 날의 일화에 대해 사건의 흐름 순서대로 발표하였으며, 접속 표현을 활용하여 결과를 성실하게 전함.",
+                        artifact: "「경험 말하기 활동지」 - 사건 순서 배치 완성.",
+                        observation: "발표 메모를 참고하여 안정적인 태도로 친구들에게 전달함.",
+                        participation: "경청하는 태도로 동료의 말하기 활동에 잘 호응함.",
+                        growth: "단순한 사건 발생 순서 나열에 머물지 않고 '그 원인은~'과 같은 인과 접속어를 덧붙여 말하는 성장을 보임.",
+                        refGrade: "B",
+                        refSentence: "자신이 겪은 경험을 일어난 순서에 맞게 정리하고, 원인과 결과 관계를 나타내는 말을 활용하여 또박또박 발표함."
                     },
                     2: {
-                        scoreDetail: "순서 정리 3/3 | 원인과 결과 명확성 2/3 | 자연스러운 연결 2/3 (총 7점 / 보통)",
-                        perfResult: "가족과 캠핑을 갔던 경험을 일이 일어난 순서에 맞게 정리하여 발표함.",
-                        artifact: "「경험 말하기 활동지」 - 순서 정리 완성.",
-                        observation: "발표 양식에 맞춰 친구들에게 들려줌.",
-                        participation: "수업 활동에 차분히 참여함.",
-                        growth: "안내 카드의 도움을 받아 '그래서'를 활용해 결과를 말해보는 성장을 보임.",
-                        refGrade: "B",
-                        refSentence: "경험한 일을 순서에 맞게 정리하여 친구들에게 발표하며, 안내 자료를 활용해 사건의 원인과 결과를 연결지어 말해보려는 노력이 확인됨."
+                        scoreDetail: "순서 정리 3/3 | 원인과 결과 명확성 3/3 | 자연스러운 연결 3/3 (총 9점 / 잘함)",
+                        perfResult: "가족 봉사활동 경험에 대해 원인과 결과('왜냐하면 ~했기 때문이고, 그 결과 ~을 깨달았다')의 인과관계를 매우 창의적이고 명확하게 구성하여 설득력 있게 발표함.",
+                        artifact: "인과관계 구조도 및 말하기 발표 원고 완성.",
+                        observation: "청중과 시선을 맞추고 원인-결과 표현에서 강조조로 자신감 있게 발표함.",
+                        participation: "발표 후 동료들의 질의응답에 원인과 결과를 덧붙여 탁월하게 답변함.",
+                        growth: "구술 발표 시 청중의 반응을 살피며 인과관계를 자연스러운 어조로 풀어내는 뛰어난 발표력을 발휘함.",
+                        refGrade: "A",
+                        refSentence: "겪은 일의 원인과 결과를 논리적이고 생생하게 연결짓고 시간의 흐름과 인과관계가 돋보이도록 우수하게 발표함."
                     },
                     3: {
                         scoreDetail: "순서 정리 2/3 | 원인과 결과 명확성 1/3 | 자연스러운 연결 1/3 (총 4점 / 노력 요함)",
@@ -793,7 +849,7 @@
 
         const canonicalUnitOrder = Object.keys(kumgangUnits);
 
-        // Helper to keep selectedUnits sorted from left to right (Curriculum Order)
+        // Helper to keep selectedUnits sorted in curriculum order
         function sortSelectedUnits() {
             selectedUnits.sort((a, b) => canonicalUnitOrder.indexOf(a) - canonicalUnitOrder.indexOf(b));
         }
@@ -842,14 +898,14 @@
                 const u = kumgangUnits[uKey];
                 const isChecked = selectedUnits.includes(uKey);
                 html += `
-                    <div onclick="toggleUnitSelection('${uKey}')" class="p-3.5 rounded-xl border-2 cursor-pointer transition flex items-start space-x-3 ${isChecked ? 'border-primary-600 bg-primary-50/70 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
+                    <div onclick="toggleUnitSelection('${uKey}')" class="p-4 rounded-2xl border-2 cursor-pointer transition flex items-start space-x-3.5 ${isChecked ? 'border-primary-600 bg-primary-50/70 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}">
                         <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); toggleUnitSelection('${uKey}')" class="mt-1 w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
-                        <div class="flex-1 space-y-0.5">
+                        <div class="flex-1 space-y-1">
                             <div class="flex justify-between items-center">
-                                <span class="font-bold text-xs ${isChecked ? 'text-primary-900' : 'text-slate-800'}">${u.name}</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded font-bold ${isChecked ? 'bg-primary-200 text-primary-800' : 'bg-slate-100 text-slate-500'}">${u.method.split(' ')[0]}</span>
+                                <span class="font-bold text-xs sm:text-sm ${isChecked ? 'text-primary-900' : 'text-slate-800'}">${u.name}</span>
+                                <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded font-bold ${isChecked ? 'bg-primary-200 text-primary-800' : 'bg-slate-100 text-slate-500'}">${u.method.split(' ')[0]}</span>
                             </div>
-                            <p class="text-[11px] text-slate-600 leading-tight">${u.element}</p>
+                            <p class="text-xs text-slate-600 leading-relaxed">${u.element}</p>
                         </div>
                     </div>
                 `;
@@ -864,7 +920,6 @@
                 return;
             }
             sortSelectedUnits();
-            // Automatically make the leftmost unit active!
             activeUnitKey = selectedUnits[0];
 
             renderActiveUnitDetails();
@@ -890,7 +945,6 @@
                 selectedUnits.push(uKey);
             }
             sortSelectedUnits();
-            // Default active unit to leftmost
             if (!selectedUnits.includes(activeUnitKey)) {
                 activeUnitKey = selectedUnits[0];
             }
@@ -906,18 +960,18 @@
 
         function setActiveUnit(uKey) {
             activeUnitKey = uKey;
-            // Always default to Student 1 when switching units
-            selectedStudentStep3 = 1;
-            selectedStudentStep4 = 1;
-            selectedStudentStep5 = 1;
-            selectStudentTab(1);
-            setStep4Student(1);
-            setStep5Student(1);
-            renderActiveUnitDetails();
+            
+            // 단계 내부에서 단원 탭 선택 시 UI 갱신
+            if (currentStep === 2) {
+                renderActiveUnitDetails();
+            } else if (currentStep === 3) {
+                renderStep3StudentData();
+            } else if (currentStep === 4) {
+                renderStep4Inputs();
+            } else if (currentStep === 5) {
+                renderStep5Comparison();
+            }
             renderStepTabs();
-            renderStep3StudentData();
-            renderStep4Inputs();
-            renderStep5Comparison();
         }
 
         function updateUnitPills() {
@@ -929,7 +983,7 @@
                 container1.innerHTML = selectedUnits.map(uKey => {
                     const u = kumgangUnits[uKey];
                     return `
-                        <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-primary-600 text-white shadow-sm flex items-center space-x-1">
+                        <span class="px-3 py-1 rounded-xl text-xs font-bold bg-primary-600 text-white shadow-sm flex items-center space-x-1.5">
                             <span>${u.name.split('.')[0]}</span>
                             <i class="fa-solid fa-check text-[10px]"></i>
                         </span>
@@ -944,7 +998,7 @@
                     const u = kumgangUnits[uKey];
                     const isActive = uKey === activeUnitKey;
                     return `
-                        <button onclick="setActiveUnit('${uKey}')" class="flex-1 py-1.5 px-2 text-center rounded-lg whitespace-nowrap transition ${isActive ? 'bg-primary-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                        <button onclick="setActiveUnit('${uKey}')" class="flex-1 py-2 px-3 text-center rounded-xl whitespace-nowrap transition ${isActive ? 'bg-primary-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
                             ${u.name.split('.')[0]}
                         </button>
                     `;
@@ -958,17 +1012,17 @@
             if (!container || !u) return;
 
             container.innerHTML = `
-                <div class="bg-white rounded-xl border border-slate-200 p-3.5 shadow-sm space-y-1">
-                    <span class="text-xs font-bold text-primary-700 block"><i class="fa-solid fa-bullseye mr-1"></i>[선택 단원: ${u.name.split('.')[0]}] 성취기준</span>
-                    <p class="text-xs font-bold text-slate-800">${u.standard}</p>
+                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-1.5">
+                    <span class="text-xs font-bold text-primary-700 block"><i class="fa-solid fa-bullseye mr-1.5"></i>[선택 단원: ${u.name.split('.')[0]}] 성취기준</span>
+                    <p class="text-xs sm:text-sm font-bold text-slate-800 leading-relaxed">${u.standard}</p>
                 </div>
-                <div class="bg-white rounded-xl border border-slate-200 p-3.5 shadow-sm space-y-1">
-                    <span class="text-xs font-bold text-secondary-600 block"><i class="fa-solid fa-list-check mr-1"></i>평가요소 및 방법</span>
-                    <p class="text-xs text-slate-800 font-medium">${u.element} (${u.method})</p>
+                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-1.5">
+                    <span class="text-xs font-bold text-secondary-600 block"><i class="fa-solid fa-list-check mr-1.5"></i>평가요소 및 방법</span>
+                    <p class="text-xs sm:text-sm text-slate-800 font-semibold leading-relaxed">${u.element} (${u.method})</p>
                 </div>
-                <div class="bg-blue-50/80 rounded-xl border border-blue-200 p-3.5 shadow-sm space-y-1 text-xs">
-                    <span class="font-bold text-blue-900 block"><i class="fa-solid fa-chalkboard-user mr-1 text-primary-600"></i>수업·평가 주안점</span>
-                    <p class="text-slate-700 leading-relaxed text-[11px]">${u.focus}</p>
+                <div class="bg-blue-50/80 rounded-2xl border border-blue-200 p-4 shadow-sm space-y-1.5">
+                    <span class="text-xs font-bold text-blue-900 block"><i class="fa-solid fa-chalkboard-user mr-1.5 text-primary-600"></i>수업·평가 주안점</span>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">${u.focus}</p>
                 </div>
             `;
         }
@@ -990,7 +1044,7 @@
                     const u = kumgangUnits[uKey];
                     const isActive = uKey === activeUnitKey;
                     return `
-                        <button onclick="setActiveUnit('${uKey}')" class="flex-1 py-1.5 px-2 text-center rounded-lg whitespace-nowrap transition ${isActive ? 'bg-primary-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                        <button onclick="setActiveUnit('${uKey}')" class="flex-1 py-2 px-3 text-center rounded-xl whitespace-nowrap transition ${isActive ? 'bg-primary-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
                             ${u.name.split('.')[0]}
                         </button>
                     `;
@@ -1072,7 +1126,6 @@
             }
 
             if (step === 2) {
-                // Ensure leftmost unit is selected whenever step 2 opens
                 if (selectedUnits.length > 0) {
                     sortSelectedUnits();
                     activeUnitKey = selectedUnits[0];
@@ -1081,19 +1134,21 @@
                 }
             }
 
-            // Always reset to Student 1 (leftmost student) when entering steps 3, 4, or 5
-            if (step === 3) {
-                selectStudentTab(1);
-            }
-
-            if (step === 4) {
-                setStep4Student(1);
-                renderStep4Inputs();
-            }
-
-            if (step === 5) {
-                setStep5Student(1);
-                renderStep5Comparison();
+            // 3, 4, 5단계 진입 시 초기 표시 규칙 적용: 선택 단원의 첫 번째 단원 + 학생 1
+            if (step === 3 || step === 4 || step === 5) {
+                if (selectedUnits.length > 0) {
+                    sortSelectedUnits();
+                    activeUnitKey = selectedUnits[0];
+                }
+                
+                if (step === 3) {
+                    selectStudentTab(1);
+                } else if (step === 4) {
+                    setStep4Student(1);
+                } else if (step === 5) {
+                    setStep5Student(1);
+                }
+                renderStepTabs();
             }
 
             const progContainer = document.getElementById('progress-container');
@@ -1123,10 +1178,8 @@
             selectedStudentStep3 = sNum;
             for (let i = 1; i <= 3; i++) {
                 const btn = document.getElementById(`tab-btn-${i}`);
-                if (i === sNum) {
-                    btn.className = "student-tab flex-1 py-2 text-xs font-bold rounded-lg transition bg-white text-primary-600 shadow-sm";
-                } else {
-                    btn.className = "student-tab flex-1 py-2 text-xs font-bold rounded-lg transition text-slate-600";
+                if (btn) {
+                    btn.className = (i === sNum) ? "student-tab flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition bg-white text-primary-600 shadow-sm" : "student-tab flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition text-slate-600 hover:text-slate-900";
                 }
             }
             renderStep3StudentData();
@@ -1140,39 +1193,42 @@
             if (!panel || !data) return;
 
             panel.innerHTML = `
-                <div class="bg-primary-50 p-3 rounded-xl border border-primary-100 shadow-sm space-y-1 text-xs">
+                <div class="bg-primary-50 p-4 rounded-2xl border border-primary-100 shadow-sm space-y-1.5 text-xs sm:text-sm md:col-span-2 lg:col-span-3">
                     <span class="font-bold text-primary-800 block"><i class="fa-solid fa-calculator text-primary-600 mr-1.5"></i>[${u.name.split('.')[0]}] 세부 평가 채점 결과</span>
-                    <p class="text-slate-700 font-semibold leading-relaxed">${data.scoreDetail}</p>
+                    <p class="text-slate-800 font-semibold leading-relaxed">${data.scoreDetail}</p>
                 </div>
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1.5 text-xs sm:text-sm">
                     <span class="font-bold text-slate-800 block"><i class="fa-solid fa-file-pen text-primary-500 mr-1.5"></i>① 학생 수행 내용 (수행평가 결과)</span>
                     <p class="text-slate-600 leading-relaxed font-medium">${data.perfResult}</p>
                 </div>
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1.5 text-xs sm:text-sm">
                     <span class="font-bold text-slate-800 block"><i class="fa-solid fa-box-archive text-amber-500 mr-1.5"></i>② 학생 산출물 핵심</span>
                     <p class="text-slate-600 leading-relaxed">${data.artifact}</p>
                 </div>
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1.5 text-xs sm:text-sm">
                     <span class="font-bold text-slate-800 block"><i class="fa-solid fa-eye text-secondary-600 mr-1.5"></i>③ 교사 관찰 내용</span>
                     <p class="text-slate-600 leading-relaxed font-medium">${data.observation}</p>
                 </div>
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1.5 text-xs sm:text-sm">
                     <span class="font-bold text-slate-800 block"><i class="fa-solid fa-users text-blue-500 mr-1.5"></i>④ 학습활동 참여도</span>
                     <p class="text-slate-600 leading-relaxed">${data.participation}</p>
                 </div>
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-1 text-xs">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1.5 text-xs sm:text-sm md:col-span-2 lg:col-span-2">
                     <span class="font-bold text-slate-800 block"><i class="fa-solid fa-chart-line text-emerald-500 mr-1.5"></i>⑤ 변화와 성장</span>
-                    <p class="text-slate-600 leading-relaxed">${data.growth}</p>
+                    <p class="text-slate-600 leading-relaxed font-medium">${data.growth}</p>
                 </div>
             `;
         }
 
         function setStep4Student(sNum) {
             selectedStudentStep4 = sNum;
-            document.getElementById('step4-student-badge').innerText = `학생 0${sNum} 작성`;
+            const badge = document.getElementById('step4-student-badge');
+            if (badge) badge.innerText = `학생 0${sNum} 작성`;
             for (let i = 1; i <= 3; i++) {
                 const btn = document.getElementById(`step4-tab-${i}`);
-                btn.className = (i === sNum) ? "step4-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition bg-white text-primary-600 shadow-sm" : "step4-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition text-slate-600";
+                if (btn) {
+                    btn.className = (i === sNum) ? "step4-tab flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition bg-white text-primary-600 shadow-sm" : "step4-tab flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition text-slate-600 hover:text-slate-900";
+                }
             }
             renderStep4Inputs();
         }
@@ -1213,26 +1269,26 @@
             const refCard = document.getElementById('step4-student-ref-card');
             if (refCard && sData) {
                 refCard.innerHTML = `
-                    <div class="font-bold text-slate-800 flex justify-between items-center border-b border-blue-200 pb-1.5">
-                        <span class="text-xs text-primary-900"><i class="fa-solid fa-clipboard-user mr-1 text-primary-600"></i>[${u.name.split('.')[0]}] 학생 0${sNum} 수행 및 관찰 데이터</span>
-                        <span class="text-[10px] bg-primary-100 text-primary-800 font-bold px-2 py-0.5 rounded-full">작성 참고용</span>
+                    <div class="font-bold text-slate-800 flex justify-between items-center border-b border-blue-200 pb-2">
+                        <span class="text-xs sm:text-sm text-primary-900"><i class="fa-solid fa-clipboard-user mr-1.5 text-primary-600"></i>[${u.name.split('.')[0]}] 학생 0${sNum} 관찰 데이터</span>
+                        <span class="text-[10px] sm:text-xs bg-primary-100 text-primary-800 font-bold px-2.5 py-0.5 rounded-full border border-primary-200">작성 참고용</span>
                     </div>
-                    <div class="text-[11px] text-slate-700 space-y-1.5 pt-1">
+                    <div class="text-xs sm:text-sm text-slate-700 space-y-2.5 pt-1">
                         <div>
-                            <span class="font-bold text-primary-800 block"><i class="fa-solid fa-bullseye mr-1 text-primary-600"></i>선택 단원 성취기준</span>
-                            <p class="text-slate-800 font-bold leading-relaxed bg-white p-2 rounded-lg border border-blue-100 text-[11px]">${u.standard}</p>
+                            <span class="font-bold text-primary-800 block mb-0.5"><i class="fa-solid fa-bullseye mr-1 text-primary-600"></i>선택 단원 성취기준</span>
+                            <p class="text-slate-800 font-bold leading-relaxed bg-white p-2.5 rounded-xl border border-blue-100">${u.standard}</p>
                         </div>
                         <div>
-                            <span class="font-bold text-primary-700 block"><i class="fa-solid fa-file-pen mr-1"></i>학생 수행 내용</span>
-                            <p class="text-slate-800 leading-relaxed font-medium bg-white p-2 rounded-lg border border-blue-100">${sData.perfResult}</p>
+                            <span class="font-bold text-primary-700 block mb-0.5"><i class="fa-solid fa-file-pen mr-1"></i>학생 수행 내용</span>
+                            <p class="text-slate-800 leading-relaxed font-medium bg-white p-2.5 rounded-xl border border-blue-100">${sData.perfResult}</p>
                         </div>
                         <div>
-                            <span class="font-bold text-secondary-700 block"><i class="fa-solid fa-eye mr-1"></i>교사 관찰 내용</span>
-                            <p class="text-slate-800 leading-relaxed font-medium bg-white p-2 rounded-lg border border-blue-100">${sData.observation}</p>
+                            <span class="font-bold text-secondary-700 block mb-0.5"><i class="fa-solid fa-eye mr-1"></i>교사 관찰 내용</span>
+                            <p class="text-slate-800 leading-relaxed font-medium bg-white p-2.5 rounded-xl border border-blue-100">${sData.observation}</p>
                         </div>
                         <div>
-                            <span class="font-bold text-emerald-700 block"><i class="fa-solid fa-chart-line mr-1"></i>변화와 성장</span>
-                            <p class="text-slate-700 leading-relaxed text-[10.5px] bg-white p-2 rounded-lg border border-blue-100">${sData.growth}</p>
+                            <span class="font-bold text-emerald-700 block mb-0.5"><i class="fa-solid fa-chart-line mr-1"></i>변화와 성장</span>
+                            <p class="text-slate-700 leading-relaxed bg-white p-2.5 rounded-xl border border-blue-100">${sData.growth}</p>
                         </div>
                     </div>
                 `;
@@ -1256,7 +1312,7 @@
                     if (isWritten) writtenCount++;
 
                     return `
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 ${isWritten ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-slate-200 text-slate-500 border border-slate-300'}">
+                        <span class="px-2.5 py-1 rounded-lg text-xs font-bold flex items-center space-x-1 ${isWritten ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-slate-200 text-slate-500 border border-slate-300'}">
                             <i class="fa-solid ${isWritten ? 'fa-pen-check text-emerald-600' : 'fa-pen-clip'}"></i>
                             <span>${unitObj.name.split('.')[0]}: ${isWritten ? '작성 완료' : '미작성'}</span>
                         </span>
@@ -1265,7 +1321,6 @@
                 document.getElementById('teacher-written-count-badge').innerText = `${writtenCount}/${selectedUnits.length}개 단원 작성됨`;
             }
 
-            // Render Combined Preview: merges each selected unit's written comment for current student
             renderStep4MergedPreview();
         }
 
@@ -1295,10 +1350,13 @@
 
         function setStep5Student(sNum) {
             selectedStudentStep5 = sNum;
-            document.getElementById('step5-student-badge').innerText = `학생 0${sNum} 비교`;
+            const badge = document.getElementById('step5-student-badge');
+            if (badge) badge.innerText = `학생 0${sNum} 비교`;
             for (let i = 1; i <= 3; i++) {
                 const btn = document.getElementById(`step5-tab-${i}`);
-                btn.className = (i === sNum) ? "step5-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition bg-white text-primary-600 shadow-sm" : "step5-tab flex-1 py-1.5 text-xs font-bold rounded-lg transition text-slate-600";
+                if (btn) {
+                    btn.className = (i === sNum) ? "step5-tab flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition bg-white text-primary-600 shadow-sm" : "step5-tab flex-1 py-2 text-xs sm:text-sm font-bold rounded-lg transition text-slate-600 hover:text-slate-900";
+                }
             }
             renderStep5Comparison();
         }
@@ -1317,10 +1375,10 @@
 
             if (!myGrade || !initialComment) {
                 container.innerHTML = `
-                    <div class="bg-amber-50 border border-amber-300 p-4 rounded-xl text-center space-y-2">
-                        <i class="fa-solid fa-lock text-amber-600 text-2xl"></i>
-                        <h3 class="font-bold text-sm text-amber-900">[${u.name.split('.')[0]}] 교사 작성 필요</h3>
-                        <p class="text-xs text-amber-800">4단계 성취수준 선택 및 성취기준·특기사항 작성을 먼저 진행해 주세요.</p>
+                    <div class="bg-amber-50 border border-amber-300 p-6 rounded-2xl text-center space-y-2">
+                        <i class="fa-solid fa-lock text-amber-600 text-3xl"></i>
+                        <h3 class="font-bold text-base text-amber-900">[${u.name.split('.')[0]}] 교사 작성 필요</h3>
+                        <p class="text-xs sm:text-sm text-amber-800">4단계 성취수준 선택 및 성취기준·특기사항 작성을 먼저 진행해 주세요.</p>
                     </div>
                 `;
                 return;
@@ -1329,45 +1387,53 @@
             const isMatch = myGrade === data.refGrade;
 
             container.innerHTML = `
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-xs">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <span class="font-bold text-slate-800"><i class="fa-solid fa-code-compare text-primary-500 mr-1"></i>[${u.name.split('.')[0]}] 성취수준 판단 비교</span>
-                        ${isMatch ? 
-                            `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-check mr-1"></i>판단 일치</span>` : 
-                            `<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-triangle-exclamation mr-1"></i>판단 차이</span>`
-                        }
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-xs sm:text-sm">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <span class="font-bold text-slate-800"><i class="fa-solid fa-code-compare text-primary-500 mr-1.5"></i>[${u.name.split('.')[0]}] 성취수준 판단 비교</span>
+                            ${isMatch ? 
+                                `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-check mr-1"></i>판단 일치</span>` : 
+                                `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-triangle-exclamation mr-1"></i>판단 차이</span>`
+                            }
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 text-center">
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <span class="text-slate-500 text-xs block">나의 선택 성취수준</span>
+                                <span class="text-2xl font-black text-primary-600">${myGrade}</span>
+                            </div>
+                            <div class="bg-primary-50 p-3 rounded-xl border border-primary-100">
+                                <span class="text-primary-700 text-xs block">연수용 참고 성취수준</span>
+                                <span class="text-2xl font-black text-primary-700">${data.refGrade}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 text-center">
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                            <span class="text-slate-500 text-[10px] block">나의 선택 성취수준</span>
-                            <span class="text-xl font-black text-primary-600">${myGrade}</span>
-                        </div>
-                        <div class="bg-primary-50 p-2.5 rounded-xl border border-primary-100">
-                            <span class="text-primary-700 text-[10px] block">연수용 참고 성취수준</span>
-                            <span class="text-xl font-black text-primary-700">${data.refGrade}</span>
-                        </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-xs sm:text-sm">
+                        <span class="font-bold text-primary-700 block"><i class="fa-solid fa-lightbulb text-amber-500 mr-1.5"></i>[연수용 참고 기재 예시]</span>
+                        <p class="bg-primary-50/70 p-3.5 rounded-xl text-primary-900 leading-relaxed border border-primary-100">${data.refSentence}</p>
                     </div>
                 </div>
 
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-xs">
-                    <span class="font-bold text-slate-800 block"><i class="fa-solid fa-align-left text-secondary-600 mr-1"></i>성취기준 및 특기사항 문장 비교</span>
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-slate-500 block">[성취기준 및 특기사항 초안]</span>
-                        <p class="bg-slate-50 p-2.5 rounded-lg text-slate-700 leading-relaxed text-[11px]">${initialComment}</p>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-xs sm:text-sm">
+                    <span class="font-bold text-slate-800 block"><i class="fa-solid fa-align-left text-secondary-600 mr-1.5"></i>성취기준 및 특기사항 문장 수정 및 최종 확정</span>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <span class="text-xs font-bold text-slate-500 block">[내가 작성한 초안]</span>
+                            <p class="bg-slate-50 p-3.5 rounded-xl text-slate-700 leading-relaxed border border-slate-200 h-28 overflow-y-auto">${initialComment}</p>
+                        </div>
+                        
+                        <div class="space-y-1.5">
+                            <label for="step5-final-input-${sNum}" class="font-bold text-slate-800 block text-xs">
+                                <i class="fa-solid fa-check-double text-emerald-600 mr-1"></i>[최종 수정한 교사 성취기준 및 특기사항]
+                            </label>
+                            <textarea id="step5-final-input-${sNum}" rows="4" class="w-full text-xs sm:text-sm p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus outline-none resize-none h-28">${uState.finalComments[sNum] || initialComment}</textarea>
+                        </div>
                     </div>
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-primary-600 block">[연수용 참고 기재 예시]</span>
-                        <p class="bg-primary-50/70 p-2.5 rounded-lg text-primary-900 leading-relaxed text-[11px] border border-primary-100">${data.refSentence}</p>
-                    </div>
-                    <div class="space-y-1.5 pt-2 border-t border-slate-100">
-                        <label for="step5-final-input-${sNum}" class="font-bold text-slate-800 block text-[11px]">
-                            <i class="fa-solid fa-check-double text-emerald-600 mr-1"></i>[최종 수정한 교사 성취기준 및 특기사항]
-                        </label>
-                        <textarea id="step5-final-input-${sNum}" rows="3" class="w-full text-xs p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-none">${uState.finalComments[sNum] || initialComment}</textarea>
-                        <button onclick="confirmFinalComment(${sNum})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition">
-                            <i class="fa-solid fa-circle-check mr-1"></i>최종 확정
-                        </button>
-                    </div>
+
+                    <button onclick="confirmFinalComment(${sNum})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs sm:text-sm transition shadow">
+                        <i class="fa-solid fa-circle-check mr-1.5"></i>최종 수정한 문장 저장 확정
+                    </button>
                 </div>
             `;
         }
@@ -1392,12 +1458,12 @@
 
             // 1. Selected Units Info
             const stdSec = document.getElementById('report-standard-section');
-            stdSec.innerHTML = `<h3 class="font-bold text-xs text-primary-700 border-l-3 border-primary-600 pl-2">1. 선택된 실습 단원 및 성취기준 (${selectedUnits.length}개 단원)</h3>`;
+            stdSec.innerHTML = `<h3 class="font-bold text-xs sm:text-sm text-primary-800 border-l-4 border-primary-600 pl-2.5">1. 선택된 실습 단원 및 성취기준 (${selectedUnits.length}개 단원)</h3>`;
             
             selectedUnits.forEach(uKey => {
                 const u = kumgangUnits[uKey];
                 stdSec.innerHTML += `
-                    <div class="bg-slate-50 p-2.5 rounded-lg space-y-1 text-[11px]">
+                    <div class="bg-slate-50 p-3 rounded-xl space-y-1 text-xs sm:text-sm border border-slate-200">
                         <p><b>• 단원:</b> ${u.name}</p>
                         <p><b>• 성취기준:</b> ${u.standard}</p>
                         <p><b>• 평가요소:</b> ${u.element} (${u.method})</p>
@@ -1413,12 +1479,12 @@
                 const text = getStudentComprehensiveText(i);
 
                 compSec.innerHTML += `
-                    <div class="border-2 border-emerald-500 bg-emerald-50/40 p-3.5 rounded-xl space-y-2 print-card">
-                        <div class="flex justify-between items-center border-b border-emerald-200 pb-1.5">
-                            <span class="font-bold text-xs text-emerald-900"><i class="fa-solid fa-user-check mr-1"></i>학생 0${i} 종합 성취수준 및 특기사항</span>
-                            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">교사 직접 작성 기반 통합</span>
+                    <div class="border-2 border-emerald-500 bg-emerald-50/40 p-4 rounded-2xl space-y-2 print-card">
+                        <div class="flex justify-between items-center border-b border-emerald-200 pb-2">
+                            <span class="font-bold text-xs sm:text-sm text-emerald-900"><i class="fa-solid fa-user-check mr-1.5"></i>학생 0${i} 종합 성취수준 및 특기사항</span>
+                            <span class="text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-300">교사 직접 작성 기반 통합</span>
                         </div>
-                        <p class="text-xs text-slate-800 leading-relaxed font-medium bg-white p-2.5 rounded-lg border border-emerald-200">
+                        <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium bg-white p-3 rounded-xl border border-emerald-200">
                             ${text}
                         </p>
                     </div>
@@ -1434,8 +1500,8 @@
                 const uState = getUnitState(uKey);
 
                 studentSec.innerHTML += `
-                    <div class="bg-primary-50/60 border border-primary-200 px-3 py-1.5 rounded-lg font-bold text-xs text-primary-800">
-                        <i class="fa-solid fa-bookmark mr-1"></i> [${u.name}] 세부 수행 및 관찰 기록
+                    <div class="bg-primary-50/70 border border-primary-200 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm text-primary-800">
+                        <i class="fa-solid fa-bookmark mr-1.5"></i> [${u.name}] 세부 수행 및 관찰 기록
                     </div>
                 `;
 
@@ -1446,15 +1512,15 @@
                     const final = uState.finalComments[i] || initial;
 
                     studentSec.innerHTML += `
-                        <div class="border border-slate-200 p-3 rounded-xl space-y-1.5 bg-white print-card text-[11px]">
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-1">
+                        <div class="border border-slate-200 p-4 rounded-2xl space-y-2 bg-white print-card text-xs sm:text-sm">
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-1.5">
                                 <span class="font-bold text-slate-900">학생 0${i}</span>
-                                <span class="font-bold px-2 py-0.5 rounded bg-slate-100 text-primary-700">성취수준: ${grade}</span>
+                                <span class="font-bold px-2.5 py-0.5 rounded-lg bg-slate-100 text-primary-700 border border-slate-200">성취수준: ${grade}</span>
                             </div>
                             <p><b>학생 수행 내용:</b> ${data.perfResult}</p>
                             <p><b>교사 관찰 내용:</b> ${data.observation}</p>
                             <p><b>변화와 성장:</b> ${data.growth}</p>
-                            <p class="text-primary-900 bg-primary-50 p-1.5 rounded"><b>교사 작성 성취기준 및 특기사항:</b> ${final}</p>
+                            <p class="text-primary-900 bg-primary-50 p-2.5 rounded-xl border border-primary-100"><b>교사 작성 성취기준 및 특기사항:</b> ${final}</p>
                         </div>
                     `;
                 }
